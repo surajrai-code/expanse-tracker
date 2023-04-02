@@ -1,155 +1,121 @@
-import { useState, useRef, useContext } from "react";
-import classes from "./SignUp.module.css";
-import { Button } from "react-bootstrap";
-import AuthContext from "../store/AuthContext";
-import { useHistory } from "react-router-dom";
-const SignUp = () => {
-  const history = useHistory();
-  const authCtx = useContext(AuthContext);
-  const [isLogin, setIsLogin] = useState(true);
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setconfirmPassword] = useState("");
-  const [isValid, setIsValid] = useState(false);
-  const emailInputRef = useRef();
-  const passwordInputRef = useRef();
-  const switchAuthModelHandler = () => {
-    setIsLogin((prevState) => !prevState);
-  };
-  function validateConfirmPassword(password, confirmPassword) {
-    return password === confirmPassword;
-  }
-  const handlePasswordchange = (event) => {
-    setPassword(event.target.value);
-  };
-  const hadleConfirmPasswordChange = (event) => {
-    setconfirmPassword(event.target.value);
-    setIsValid(validateConfirmPassword(password, event.target.value));
-  };
-  const submitHandler = (event) => {
-    event.preventDefault();
-    // const enteredEmail = emailInputRef.current.value;
-    // const enteredpassword = passwordInputRef.current.value;
+import React, { useRef } from "react";
+import { Link } from "react-router-dom";
+import { Col, Button, Row, Container, Card, Form } from "react-bootstrap";
 
-    if (password === confirmPassword && !isLogin) {
-      fetch(
-        "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyB4eAcKhjMaxtHrq60AlEDI6Ace0n31ogg",
-        {
-          method: "POST",
-          body: JSON.stringify({
-            email: emailInputRef.current.value,
-            password: passwordInputRef.current.value,
-            returnSecureToken: true,
-          }),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      )
-        .then((res) => {
-          console.log("Successfull");
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+const SignUp=()=> {
+  const emailref = useRef();
+  const passwardref = useRef();
+  const confirmpasswordref = useRef();
+  const submithandler = (e) => {
+    e.preventDefault();
+    const enteredemail = emailref.current.value;
+    const enteredpassward = passwardref.current.value;
+    const enteredconfirmpassward = confirmpasswordref.current.value;
+
+    if (enteredpassward !== enteredconfirmpassward) {
+      alert("both passward are not matched");
+      return;
     }
-    if (isLogin) {
-      fetch(
-        "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyB4eAcKhjMaxtHrq60AlEDI6Ace0n31ogg",
-        {
-          method: "POST",
-          body: JSON.stringify({
-            email: emailInputRef.current.value,
-            password: passwordInputRef.current.value,
-            returnSecureToken: true,
-          }),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      )
-        .then((res) => {
-          if (res.ok) {
-            return res.json();
-          } else {
-            return res.json().then((data) => {
-              let erroMessage = "Authentication failed!";
-              if (data && data.error && data.error.message) {
-                erroMessage = data.error.message;
-              }
-              throw new Error(erroMessage);
-            });
+
+    fetch(
+      "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyB4eAcKhjMaxtHrq60AlEDI6Ace0n31ogg",
+      {
+        method: "POST",
+        body: JSON.stringify({
+          email: enteredemail,
+          password: enteredpassward,
+          returnSecureToken: true,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    ).then((res) => {
+      if (res.ok) {
+        console.log("user is succesfully signed up");
+        return res.json();
+      } else {
+        res.json().then((data) => {
+          let errorMessage = "Authentication failed";
+          if (data && data.error && data.error.message) {
+            errorMessage = data.error.message;
           }
-        })
-        .then((data) => {
-          console.log(data);
-          authCtx.login(data.idToken);
-          history.replace("/ExpensePage");
-        })
-        .catch((err) => {
-          alert(err.message);
+          alert(errorMessage);
         });
-    }
+      }
+    });
   };
-  return (
-    <section>
-    <div className={classes.sign}>
-      <h1>{isLogin ? "Login" : "Sign Up"}</h1>
-      <form onSubmit={submitHandler}>
-        <div>
-          <div>
-            {" "}
-            <label htmlFor="email">Email</label>
-          </div>
-          <div>
-            <input type="email" ref={emailInputRef} required></input>
-          </div>
-        </div>
-        <div>
-          <div>
-            <label htmlFor="password">Password</label>
-          </div>
-          <div>
-            <input
-              type="password"
-              onChange={handlePasswordchange}
-              value={password}
-              ref={passwordInputRef}
-              required
-            ></input>
-          </div>
-        </div>
-        {!isLogin && (
-          <div>
-            <div>
-              {" "}
-              <label htmlFor="confirm password">Confirm Password</label>
-            </div>
-            <div>
-              <input
-                type="password"
-                onChange={hadleConfirmPasswordChange}
-                value={confirmPassword}
-                ref={passwordInputRef}
-                required
-              ></input>
-              {isValid ? null : (
-                <p style={{ color: "red" }}> ! password do not match...</p>
-              )}
-            </div>
-          </div>
-        )}
-        <div>
-          <Button>{isLogin ? "Login" : "Sing up"}</Button>
-          <div>
-            <Button type="button" onClick={switchAuthModelHandler}>
-              {isLogin ? "Create new account" : "Have an account ? Login"}
-            </Button>
-          </div>
-        </div>
-      </form>
-    </div>
-  </section>
-);
-}
 
+  return (
+    <div>
+      <Container>
+        <Row className="vh-100 d-flex justify-content-center align-items-center">
+          <Col md={8} lg={6} xs={12}>
+            <Card className="px-4">
+              <Card.Body>
+                <div className="mb-3 mt-md-4">
+                  <h2 className="fw-bold mb-2 text-center text-uppercase ">
+                    Sign Up
+                  </h2>
+                  <div className="mb-3">
+                    <Form onSubmit={submithandler}>
+                      <Form.Group className="mb-3" controlId="formBasicEmail">
+                        <Form.Label className="text-center">
+                          Email address
+                        </Form.Label>
+                        <Form.Control
+                          type="email"
+                          placeholder="Enter email"
+                          ref={emailref}
+                        />
+                      </Form.Group>
+
+                      <Form.Group
+                        className="mb-3"
+                        controlId="formBasicPassword"
+                      >
+                        <Form.Label>Password</Form.Label>
+                        <Form.Control
+                          type="password"
+                          placeholder="Password"
+                          ref={passwardref}
+                        />
+                      </Form.Group>
+                      <Form.Group
+                        className="mb-3"
+                        controlId="formBasicPassword"
+                      >
+                        <Form.Label>Confirm Password</Form.Label>
+                        <Form.Control
+                          type="password"
+                          placeholder="Password"
+                          ref={confirmpasswordref}
+                        />
+                      </Form.Group>
+                      <Form.Group
+                        className="mb-3"
+                        controlId="formBasicCheckbox"
+                      ></Form.Group>
+                      <div className="d-grid">
+                        <Button variant="primary" type="submit">
+                          Sign UP
+                        </Button>
+                      </div>
+                    </Form>
+                    <div className="mt-3">
+                        <p className="mb-0  text-center">
+                          Already have an account??{" "}
+                          <Link className="text-primary fw-bold" to="login">Log in</Link>
+                        </p>
+                    </div>
+                  </div>
+                </div>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+      </Container>
+    </div>
+  );
+}
 export default SignUp;
