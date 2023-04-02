@@ -6,7 +6,6 @@ function CompleteProfile() {
   let token = localStorage.getItem("token");
   const nameRef = useRef();
   const photourlRef = useRef();
-
   const [displayName, setDisplayName] = useState("");
   const [urlLink, setUrlLink] = useState("");
 
@@ -80,9 +79,6 @@ function CompleteProfile() {
       .catch((err) => {
         alert(err.message);
       });
-
-    // enteredName = nameRef.current.value='';
-    // enteredUrl = photourlRef.current.value='';
   };
 
   return (
