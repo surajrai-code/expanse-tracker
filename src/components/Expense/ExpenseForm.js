@@ -12,9 +12,51 @@ function ExpenseForm(props) {
       Description: descriptionInputRef.current.value,
       Category: categoryInputRef.current.value,
     };
+
+    const response = await fetch(
+      "https://expance-tracker-2795d-default-rtdb.firebaseio.com/expensedata.json",
+      {
+        method: "POST",
+        body: JSON.stringify(expenseData),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const data = await response.json();
+    console.log(data);
+    props.setExpensesData((data) => [...data, expenseData]);
+
     amountInputRef.current.value = "";
     descriptionInputRef.current.value = "";
   };
+
+  const getExpenseData = async () => {
+    const response = await fetch(
+      "https://expance-tracker-2795d-default-rtdb.firebaseio.com/expensedata.json"
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        const transformedData = [];
+
+        for (const key in data) {
+          transformedData.push({
+            id: key,
+            Category: data[key].Category,
+            Description: data[key].Description,
+            Amount: data[key].Amount,
+          });
+        }
+        props.setExpensesData(transformedData);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  useEffect(() => {
+    getExpenseData();
+  }, []);
   return (
     <Fragment>
       <Container

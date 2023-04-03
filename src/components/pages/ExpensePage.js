@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import ExpenseForm from "../Expense/ExpenseForm";
+import Expense from "../Expense/Expense";
 const ExpensePage = () => {
   const VerifyEmailId = () => {
     let token = localStorage.getItem("token");
@@ -55,7 +55,7 @@ const ExpensePage = () => {
         </Link>
       </p>
       <hr />
-      <ExpenseForm/>
+      <div style={{padding:'2%'}}><Expense/></div>
     </div>
   );
 };
