@@ -3,11 +3,11 @@ import SignUp from './components/LayOut/SignUp';
 import LogIn from './components/LayOut/LogIn';
 import ExpensePage from './components/pages/ExpensePage';
 import CompleteProfile from './components/pages/CompleteProfile';
-import NavBar from './components/LayOut/NavBar';
+import Header from './components/LayOut/Header';
 function App() {
   return (
     <>
-    <NavBar/>
+    <Header/>
     <Routes>
       <Route path='/' element={<SignUp/>} />
       <Route path="login" element={<LogIn />} />

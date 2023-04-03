@@ -4,7 +4,7 @@ import Nav from "react-bootstrap/Nav";
 import { Link, useNavigate } from "react-router-dom";
 import AuthContext from "../store/AuthContext";
 
-const NavBar = () => {
+const Header = () => {
   const authCtx = useContext(AuthContext);
   const history = useNavigate();
   const isLoggedIn = authCtx.isLoggedIn;
@@ -34,4 +34,4 @@ const NavBar = () => {
   );
 };
 
-export default NavBar;
+export default Header;
