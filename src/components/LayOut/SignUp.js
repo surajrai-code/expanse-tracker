@@ -2,7 +2,7 @@ import React, { useRef } from "react";
 import { Link } from "react-router-dom";
 import { Col, Button, Row, Container, Card, Form } from "react-bootstrap";
 
-const SignUp=()=> {
+const SignUp = () => {
   const emailref = useRef();
   const passwardref = useRef();
   const confirmpasswordref = useRef();
@@ -103,10 +103,12 @@ const SignUp=()=> {
                       </div>
                     </Form>
                     <div className="mt-3">
-                        <p className="mb-0  text-center">
-                          Already have an account??{" "}
-                          <Link className="text-primary fw-bold" to="login">Log in</Link>
-                        </p>
+                      <p className="mb-0  text-center">
+                        Already have an account??{" "}
+                        <Link className="text-primary fw-bold" to="login">
+                          Log in
+                        </Link>
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -117,5 +119,5 @@ const SignUp=()=> {
       </Container>
     </div>
   );
-}
+};
 export default SignUp;

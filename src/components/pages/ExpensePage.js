@@ -1,7 +1,8 @@
 import React from "react";
 import { Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
-const ExpensePage=()=> {
+import ExpenseForm from "../Expense/ExpenseForm";
+const ExpensePage = () => {
   const VerifyEmailId = () => {
     let token = localStorage.getItem("token");
     fetch(
@@ -54,9 +55,9 @@ const ExpensePage=()=> {
         </Link>
       </p>
       <hr />
-     
+      <ExpenseForm/>
     </div>
   );
-}
+};
 
 export default ExpensePage;
