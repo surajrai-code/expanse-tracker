@@ -8,7 +8,6 @@ function ExpenseTable(props) {
     )
       .then((response) => response.json())
       .then((data) => {
-
         const transformedData = [];
 
         for (const key in data) {
@@ -28,7 +27,48 @@ function ExpenseTable(props) {
 
   useEffect(() => {
     getExpenseData();
-  }, []);  
+  }, []);
+
+  const deleteExpenseHandler = (id) => {
+    fetch(
+      `https://expance-tracker-2795d-default-rtdb.firebaseio.com/expensedata/${id}.json`,
+      {
+        method: "DELETE",
+      }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        getExpenseData();
+        console.log("Expense successfuly deleted");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const editExpenseHandler = (id) => {
+    console.log(id);
+    console.log(props);
+
+    const response = fetch(
+      `https://expance-tracker-2795d-default-rtdb.firebaseio.com/expensedata/${id}.json`,
+      {
+        method: "PUT",
+        body: JSON.stringify(props.expensesData),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   return (
     <Fragment>
       <h1 style={{ textAlign: "center" }}>Expenses</h1>
@@ -41,6 +81,10 @@ function ExpenseTable(props) {
             <p>Amount: $ {expense.Amount}</p>
             <p class="text-justify">Description : {expense.Description}</p>
             <p>Category : {expense.Category}</p>
+            <Button onClick={() => editExpenseHandler(expense.id)}>Edit</Button>
+            <Button onClick={() => deleteExpenseHandler(expense.id)}>
+              Delete
+            </Button>
           </div>
         ))}
       </div>
