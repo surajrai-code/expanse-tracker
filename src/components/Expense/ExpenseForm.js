@@ -10,16 +10,13 @@ const ExpenseForm = () => {
   const isupdate = useSelector((state) => state.expense.isupdate);
   const temp = useSelector((state) => state.expense.tempitem);
 
-  const enteredAmount = useRef(null);
-  const enteredCategorys = useRef(null);
-  const enteredDescription = useRef(null);
+  const enteredAmount = useRef();
+  const enteredCategorys = useRef();
+  const enteredDescription = useRef();
   let emailId = localStorage.getItem("mailid").replace(/[&@.]/g, "");
   const ExpenseFormHandler = async (event) => {
     event.preventDefault();
-    //console.log(enteredCategorys.current.value);
     let itemid = localStorage.getItem("itemid");
-
-    // console.log(itemid);
     const ExpenseObject = {
       amount: enteredAmount.current.value,
       categorys: enteredCategorys.current.value,
@@ -56,11 +53,9 @@ const ExpenseForm = () => {
     } catch (error) {
       console.log(error.message);
     }
-    
   };
 
   useEffect(() => {
-    
     const ExpenseFormHandler = async () => {
       try {
         const response = await fetch(
@@ -73,7 +68,7 @@ const ExpenseForm = () => {
           }
         );
         const data = await response.json();
-        
+
         const transformeddata = [];
         for (const key in data) {
           const Obj = {
@@ -90,13 +85,11 @@ const ExpenseForm = () => {
     ExpenseFormHandler();
   }, [temp]);
   const onUpdateHandler = (item) => {
-    
     Dispatch(ExpenseSliceAction.setIsupdate(true));
     enteredAmount.current.value = item.amount;
     enteredCategorys.current.value = item.categorys;
     enteredDescription.current.value = item.description;
     localStorage.setItem("itemid", item.id);
-    
   };
 
   return (
@@ -107,6 +100,7 @@ const ExpenseForm = () => {
         <input type="text" id="Amout" ref={enteredAmount} required></input>
         <label htmlFor="cars"> category</label>
         <select name="categorys" id="categorys" ref={enteredCategorys}>
+          <option value="None">choose category</option>
           <option value="Food">Food</option>
           <option value="Petrol">Petrol</option>
           <option value="Cloths">Clothes</option>
@@ -114,7 +108,12 @@ const ExpenseForm = () => {
           <option value="etc">Basic Needs</option>
         </select>
         <label htmlFor="description">description</label>
-        <input type="text" id="description" ref={enteredDescription} required></input>
+        <input
+          type="text"
+          id="description"
+          ref={enteredDescription}
+          required
+        ></input>
 
         <button type="submit">{!isupdate ? "submit" : "update"}</button>
       </form>

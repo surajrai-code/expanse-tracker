@@ -1,11 +1,7 @@
-
 import { Link } from "react-router-dom";
 import classes from "./UserPage.module.css";
-import AuthContex from "../../Context/CreateContext";
 
-const UserPage = (props) => {
-  
-
+const UserPage = () => {
   const emailverifyHandler = async () => {
     const obj = {
       idToken: localStorage.getItem("id"),

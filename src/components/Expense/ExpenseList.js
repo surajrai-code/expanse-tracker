@@ -1,6 +1,6 @@
 import React from "react";
 import ExpenseItem from "./ExpenseItem";
-import classes from "./ExpenseList.module.css";
+import "./ExpenseList.module.css";
 import { Table } from "react-bootstrap";
 
 import { useSelector } from "react-redux";
@@ -8,8 +8,6 @@ import { useSelector } from "react-redux";
 const ExpenseList = (props) => {
   const item = useSelector((state) => state.expense.items);
   console.log(item);
-  // console.log(ExpenseSliceAction);
-
   let EachListItem = item.map((item, index) => (
     <ExpenseItem
       onUpdate={props.onUpdate}
@@ -33,11 +31,9 @@ const ExpenseList = (props) => {
               <th>Delete</th>
             </tr>
           </thead>
-
           <tbody>{EachListItem}</tbody>
         </table>
       </Table>
-      {/* <ul></ul> */}
     </div>
   );
 };

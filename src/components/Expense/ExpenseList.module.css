@@ -2,7 +2,6 @@
   box-sizing: border-box;
 }
 .EachListItem-container {
-  /* background-color: rgb(233, 239, 239); */
   width: 50%;
 }
 
@@ -37,10 +36,6 @@ th {
   th,
   td {
     padding: 3px;
-    /* display: flex;
-    justify-content: left;
-    align-items: flex-start;
-    flex-direction: column; */
     padding-bottom: -5px;
     flex-wrap: wrap;
   }

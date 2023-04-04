@@ -11,7 +11,6 @@ const ExpenseItem = (props) => {
   const Dispatch = useDispatch();
   const EditButtonHandler = () => {
     props.onUpdate(props);
-    //console.log("EditButtonHandler", props);
   };
 
   const filetredLits = (id, items) => {
@@ -20,7 +19,6 @@ const ExpenseItem = (props) => {
     return list;
   };
   const deleteButtonHandler = async () => {
-    // ctx.deleteItem(props.id);
     console.log("deleteButtonHandler", props.id);
     let emailId = localStorage.getItem("mailid").replace(/[&@.]/g, "");
 
@@ -40,9 +38,6 @@ const ExpenseItem = (props) => {
       Dispatch(ExpenseSliceAction.removeItem(list));
     } catch (error) {
       console.log(error.message);
-
-      // console.log(list);
-      // Dispatch(ExpenseSliceAction.removeItem(list));
     }
   };
   return (
@@ -54,21 +49,12 @@ const ExpenseItem = (props) => {
         onClick={() => EditButtonHandler(props.id)}
         className={classes["edit-btn"]}
       >
-        {/* <button>
-            edit
-          </button> */}
         Edit
       </td>
       <td
         className={classes["delete-btn"]}
         onClick={() => deleteButtonHandler(props.id)}
       >
-        {/* <button
-           
-            className={classes["delete-btn"]}
-          >
-            delete
-          </button> */}
         delete
       </td>
     </tr>

@@ -4,11 +4,8 @@ import AuthContex from "../../Context/CreateContext";
 import classes from "./ContactDetails.module.css";
 const ContactDetails = () => {
   const ctx = useContext(AuthContex);
-  const enteredName = useRef(null);
-  const enteredUrl = useRef(null);
-
-  //getting user details
-
+  const enteredName = useRef();
+  const enteredUrl = useRef();
   useEffect(() => {
     const getuserData = async () => {
       try {
@@ -64,7 +61,7 @@ const ContactDetails = () => {
         throw new Error(data.error.message);
       } else {
         console.log("User has successfullyupdated.", data);
-       
+
         alert("User has successfully updated,");
       }
     } catch (error) {

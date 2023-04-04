@@ -7,7 +7,6 @@ import { AuthSliceAction } from "../../store/Auth";
 import { useHistory } from "react-router-dom";
 const AuthForm = () => {
   const History = useHistory();
-  // const ctx = useContext(AuthContex);
   const Dispatch = useDispatch();
   const isLogin = useSelector((state) => state.auth.isLogin);
   const isForgetpassword = useSelector((state) => state.auth.isForgetpassword);
