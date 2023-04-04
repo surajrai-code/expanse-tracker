@@ -1,114 +1,125 @@
-import React, { Fragment, useEffect, useRef } from "react";
-import { Form, Button, Row, Col, Container } from "react-bootstrap";
+import React, { useRef, useEffect } from "react";
+import classes from "./ExpenseForm.module.css";
+import ExpenseList from "./ExpenseList";
 
-function ExpenseForm(props) {
-  const amountInputRef = useRef();
-  const descriptionInputRef = useRef();
-  const categoryInputRef = useRef();
-  const submitHandler = async (event) => {
+import { ExpenseSliceAction } from "../../store/Expense";
+import { useSelector, useDispatch } from "react-redux";
+
+const ExpenseForm = () => {
+  const Dispatch = useDispatch();
+  const isupdate = useSelector((state) => state.expense.isupdate);
+  const temp = useSelector((state) => state.expense.tempitem);
+
+  const enteredAmount = useRef(null);
+  const enteredCategorys = useRef(null);
+  const enteredDescription = useRef(null);
+  let emailId = localStorage.getItem("mailid").replace(/[&@.]/g, "");
+  const ExpenseFormHandler = async (event) => {
     event.preventDefault();
-    const expenseData = {
-      Amount: amountInputRef.current.value,
-      Description: descriptionInputRef.current.value,
-      Category: categoryInputRef.current.value,
+    //console.log(enteredCategorys.current.value);
+    let itemid = localStorage.getItem("itemid");
+
+    // console.log(itemid);
+    const ExpenseObject = {
+      amount: enteredAmount.current.value,
+      categorys: enteredCategorys.current.value,
+      description: enteredDescription.current.value,
     };
-
-    const response = await fetch(
-      "https://expance-tracker-2795d-default-rtdb.firebaseio.com/expensedata.json",
-      {
-        method: "POST",
-        body: JSON.stringify(expenseData),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    const data = await response.json();
-    console.log(data);
-    props.setExpensesData((data) => [...data, expenseData]);
-
-    amountInputRef.current.value = "";
-    descriptionInputRef.current.value = "";
-  };
-
-  const getExpenseData = async () => {
-    const response = await fetch(
-      "https://expance-tracker-2795d-default-rtdb.firebaseio.com/expensedata.json"
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        const transformedData = [];
-
-        for (const key in data) {
-          transformedData.push({
-            id: key,
-            Category: data[key].Category,
-            Description: data[key].Description,
-            Amount: data[key].Amount,
-          });
+    if (
+      ExpenseObject.amount === "" ||
+      ExpenseObject.categorys === "" ||
+      ExpenseObject.description === ""
+    ) {
+      return;
+    }
+    try {
+      const response = await fetch(
+        `https://expance-tracker-2795d-default-rtdb.firebaseio.com/tracker/${emailId}/${
+          isupdate ? itemid : ""
+        }.json`,
+        {
+          method: isupdate ? "PUT" : "POST",
+          body: JSON.stringify(ExpenseObject),
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
-        props.setExpensesData(transformedData);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+      );
+      const data = await response.json();
+
+      Dispatch(ExpenseSliceAction.updateList(ExpenseObject));
+      Dispatch(ExpenseSliceAction.setIsupdate(false));
+
+      enteredAmount.current.value = null;
+      enteredCategorys.current.value = null;
+      enteredDescription.current.value = null;
+    } catch (error) {
+      console.log(error.message);
+    }
+    
   };
 
   useEffect(() => {
-    getExpenseData();
-  }, []);
+    
+    const ExpenseFormHandler = async () => {
+      try {
+        const response = await fetch(
+          `https://expance-tracker-2795d-default-rtdb.firebaseio.com/tracker/${emailId}.json`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        const data = await response.json();
+        
+        const transformeddata = [];
+        for (const key in data) {
+          const Obj = {
+            id: key,
+            ...data[key],
+          };
+          transformeddata.push(Obj);
+        }
+        Dispatch(ExpenseSliceAction.AddItem(transformeddata));
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
+    ExpenseFormHandler();
+  }, [temp]);
+  const onUpdateHandler = (item) => {
+    
+    Dispatch(ExpenseSliceAction.setIsupdate(true));
+    enteredAmount.current.value = item.amount;
+    enteredCategorys.current.value = item.categorys;
+    enteredDescription.current.value = item.description;
+    localStorage.setItem("itemid", item.id);
+    
+  };
+
   return (
-    <Fragment>
-      <Container
-        className="p-3 my-3  text-white"
-        style={{ backgroundColor: "#b3adba" }}
-      >
-        <Form onSubmit={submitHandler} id="expenses">
-          <Row>
-            <Col className="form-control">
-              <input
-                type="number"
-                placeholder="Amount"
-                name="Amount"
-                ref={amountInputRef}
-                required
-              ></input>
-            </Col>
+    <div className={classes["ExpenseForm-container"]}>
+      <form className={classes["ExpenseForm"]} onSubmit={ExpenseFormHandler}>
+        <h2>ExpenseForm</h2>
+        <label htmlFor="amount">Amout</label>
+        <input type="text" id="Amout" ref={enteredAmount} required></input>
+        <label htmlFor="cars"> category</label>
+        <select name="categorys" id="categorys" ref={enteredCategorys}>
+          <option value="Food">Food</option>
+          <option value="Petrol">Petrol</option>
+          <option value="Cloths">Clothes</option>
+          <option value="tavel">travel</option>
+          <option value="etc">Basic Needs</option>
+        </select>
+        <label htmlFor="description">description</label>
+        <input type="text" id="description" ref={enteredDescription} required></input>
 
-            <Col className="form-control">
-              <textarea
-                style={{ height: "25px" }}
-                type="text"
-                placeholder="Description"
-                name="Description"
-                ref={descriptionInputRef}
-                required
-              ></textarea>
-            </Col>
-
-            <Col className="form-control">
-              <select ref={categoryInputRef} name="Category" required>
-                <option>Food</option>
-
-                <option>Petrol</option>
-
-                <option>Clothes</option>
-
-                <option>other..</option>
-              </select>
-            </Col>
-
-            <Col className="mt-5">
-              <Button type="submit" variant="success">
-                Add New Expense
-              </Button>
-            </Col>
-          </Row>
-        </Form>
-      </Container>
-    </Fragment>
+        <button type="submit">{!isupdate ? "submit" : "update"}</button>
+      </form>
+      <ExpenseList onUpdate={onUpdateHandler}></ExpenseList>
+    </div>
   );
-}
-
+};
 export default ExpenseForm;
-

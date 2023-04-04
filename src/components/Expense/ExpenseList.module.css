@@ -1,0 +1,71 @@
+* {
+  box-sizing: border-box;
+}
+.EachListItem-container {
+  /* background-color: rgb(233, 239, 239); */
+  width: 50%;
+}
+
+.EachListItem-container {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  margin: 5%;
+  font-size: larger;
+}
+
+.EachListItem-container ul {
+  padding: 1%;
+  margin: 3%;
+}
+
+table,
+th,
+td {
+  padding: 25px;
+  padding-bottom: -5px;
+  padding-right: 50px;
+  padding-top: 10px;
+}
+th {
+  color: black;
+  background-color: rgb(255, 255, 255);
+}
+
+@media screen and (max-width: 700px) {
+  table,
+  th,
+  td {
+    padding: 3px;
+    /* display: flex;
+    justify-content: left;
+    align-items: flex-start;
+    flex-direction: column; */
+    padding-bottom: -5px;
+    flex-wrap: wrap;
+  }
+  table {
+    margin: 0%;
+  }
+}
+@media screen and (max-width: 390px) {
+  table,
+  th,
+  td {
+    padding: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding-right: 28px;
+    flex-wrap: wrap;
+    padding-top: 3px;
+  }
+  th {
+    padding-right: 60px;
+  }
+  td,
+  tr {
+    padding-right: 70px;
+  }
+}

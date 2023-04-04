@@ -1,0 +1,15 @@
+.logout {
+  border: none;
+
+  border-radius: 2px;
+  padding: 2px;
+  margin: 4px;
+  cursor: pointer;
+  background-color: #fcffb2;
+  transition: background-color 1s ease;
+}
+@media screen and (max-width: 700px) {
+  .logout {
+    padding: 10px;
+  }
+}
